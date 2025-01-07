@@ -1,0 +1,34 @@
+import pandas as pd
+import numpy as np
+
+# Sample data with missing values
+data = {'Age': [25, np.nan, 30, 35, 40, np.nan, 45, 50, 60, 70],
+        'Salary': [50000, 55000, 60000, 70000, 80000, 90000, 100000, np.nan, 120000, 130000]}
+print(data)
+# Create DataFrame
+df = pd.DataFrame(data)
+print(df)
+
+# Handling Missing Data
+# 1. Filling missing values with the mean (for continuous variables)
+df['Age'].fillna(df['Age'].mean(), inplace=True)
+df['Salary'].fillna(df['Salary'].mean(), inplace=True)
+
+# 2. Dropping rows with missing values (if desired)
+# df.dropna(inplace=True)
+
+print("Data after handling missing values:")
+print(df)
+
+# Handling Outliers
+# 1. Using IQR (Interquartile Range) method to detect and remove outliers
+Q1 = df['Salary'].quantile(0.25)
+Q3 = df['Salary'].quantile(0.75)
+IQR = Q3 - Q1
+
+# Defining upper and lower bounds for Salary
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+
+# Filtering out outliers
+df_cleaned = df[(df['Salary'] >= lower_bound) & (df['Salary'] <= upper_bound)]
